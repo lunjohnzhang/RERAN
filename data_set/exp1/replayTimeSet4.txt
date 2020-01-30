@@ -1,0 +1,19 @@
+origin: 1844.291467 - 1820.869808 = 23.421659
+       30.01 real         0.00 user         0.02 sys
+       30.96 real         0.00 user         0.02 sys
+       29.43 real         0.00 user         0.02 sys
+       29.88 real         0.00 user         0.02 sys
+       30.23 real         0.00 user         0.02 sys
+       29.67 real         0.00 user         0.02 sys
+       29.84 real         0.00 user         0.03 sys
+       29.63 real         0.00 user         0.02 sys
+       29.21 real         0.00 user         0.02 sys
+       29.01 real         0.00 user         0.03 sys
+       30.33 real         0.00 user         0.03 sys
+       29.70 real         0.00 user         0.03 sys
+       30.59 real         0.00 user         0.03 sys
+       30.71 real         0.00 user         0.03 sys
+       30.52 real         0.00 user         0.02 sys
+mean: 29.9813
+29.9813 / 23.421659 = 1.280
+standard diviation: 0.548074

@@ -1,0 +1,14 @@
+origin: 2102.800959 - 2068.571294 = 34.229665
+       81.80 real         0.02 user         0.16 sys
+       72.64 real         0.02 user         0.16 sys       
+       81.53 real         0.02 user         0.17 sys
+       80.13 real         0.02 user         0.18 sys
+       92.36 real         0.02 user         0.18 sys
+       79.79 real         0.02 user         0.18 sys
+       80.28 real         0.02 user         0.17 sys
+       73.05 real         0.02 user         0.18 sys
+       84.06 real         0.02 user         0.18 sys
+       79.20 real         0.02 user         0.18 sys
+mean: 80.484
+times: 80.484 / 34.229665 = 2.351
+standard diviation: 5.251

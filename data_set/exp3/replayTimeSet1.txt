@@ -1,0 +1,45 @@
+       27.96 real         0.00 user         0.04 sys
+       27.83 real         0.00 user         0.04 sys
+       26.47 real         0.00 user         0.04 sys
+       27.08 real         0.00 user         0.04 sys
+       27.60 real         0.00 user         0.04 sys
+       27.52 real         0.00 user         0.04 sys
+       27.50 real         0.00 user         0.03 sys
+       27.04 real         0.00 user         0.04 sys
+       26.61 real         0.00 user         0.04 sys
+       26.76 real         0.00 user         0.04 sys
+       26.86 real         0.00 user         0.04 sys
+       27.43 real         0.00 user         0.04 sys
+       27.06 real         0.00 user         0.04 sys
+       27.19 real         0.00 user         0.04 sys
+       27.51 real         0.00 user         0.04 sys
+       27.10 real         0.00 user         0.04 sys
+       26.30 real         0.00 user         0.04 sys
+       26.92 real         0.00 user         0.04 sys
+       26.46 real         0.00 user         0.04 sys
+       27.39 real         0.00 user         0.04 sys
+       27.23 real         0.00 user         0.04 sys
+       26.68 real         0.00 user         0.04 sys
+       27.24 real         0.00 user         0.04 sys
+       27.02 real         0.00 user         0.03 sys
+       26.89 real         0.00 user         0.04 sys
+       26.99 real         0.00 user         0.04 sys
+       26.47 real         0.00 user         0.03 sys
+       27.68 real         0.00 user         0.03 sys
+       26.79 real         0.00 user         0.03 sys
+       27.10 real         0.00 user         0.03 sys
+       26.89 real         0.00 user         0.04 sys
+       26.81 real         0.00 user         0.03 sys
+       27.00 real         0.00 user         0.04 sys
+       27.02 real         0.00 user         0.04 sys
+       27.17 real         0.00 user         0.04 sys
+       27.16 real         0.00 user         0.03 sys
+       27.29 real         0.00 user         0.04 sys
+       27.21 real         0.00 user         0.04 sys
+       28.43 real         0.00 user         0.04 sys
+       27.23 real         0.00 user         0.04 sys
+calculator(Samsung S5)
+eplay time is 17.894
+mean: 27.122
+standard diviation: 0.424
+error: 1.516

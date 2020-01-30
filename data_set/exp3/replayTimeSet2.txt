@@ -1,0 +1,45 @@
+       21.47 real         0.00 user         0.05 sys
+       22.21 real         0.00 user         0.04 sys
+       21.66 real         0.00 user         0.04 sys
+       21.46 real         0.00 user         0.05 sys
+       22.18 real         0.00 user         0.05 sys
+       22.05 real         0.00 user         0.05 sys
+       21.84 real         0.00 user         0.05 sys
+       21.86 real         0.00 user         0.05 sys
+       22.29 real         0.00 user         0.05 sys
+       21.81 real         0.00 user         0.05 sys
+       22.11 real         0.01 user         0.05 sys
+       22.03 real         0.00 user         0.05 sys
+       22.12 real         0.00 user         0.04 sys
+       21.44 real         0.00 user         0.05 sys
+       21.01 real         0.00 user         0.05 sys
+       22.01 real         0.00 user         0.05 sys
+       22.14 real         0.00 user         0.04 sys
+       22.48 real         0.00 user         0.04 sys
+       22.27 real         0.00 user         0.04 sys
+       22.83 real         0.00 user         0.04 sys
+       22.05 real         0.00 user         0.04 sys
+       22.12 real         0.00 user         0.04 sys
+       22.25 real         0.00 user         0.04 sys
+       21.70 real         0.00 user         0.04 sys
+       22.47 real         0.00 user         0.05 sys
+       22.13 real         0.00 user         0.04 sys
+       22.18 real         0.00 user         0.05 sys
+       21.26 real         0.00 user         0.04 sys
+       22.07 real         0.00 user         0.05 sys
+       22.17 real         0.00 user         0.05 sys
+       22.12 real         0.00 user         0.05 sys
+       22.07 real         0.00 user         0.05 sys
+       21.88 real         0.00 user         0.05 sys
+       22.35 real         0.00 user         0.05 sys
+       21.60 real         0.00 user         0.05 sys
+       22.04 real         0.00 user         0.05 sys
+       22.19 real         0.00 user         0.05 sys
+       21.91 real         0.00 user         0.05 sys
+       21.61 real         0.00 user         0.05 sys
+       21.71 real         0.00 user         0.05 sys
+angry bird
+replay time is 9.022
+mean: 21.979
+standard diviation: 0.349
+error: 2.436

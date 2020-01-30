@@ -1,0 +1,16 @@
+origin: 4280.026940 - 4266.046577 = 13.980363
+       38.43 real         0.01 user         0.10 sys
+       38.46 real         0.01 user         0.10 sys
+       37.75 real         0.01 user         0.10 sys
+       38.63 real         0.01 user         0.10 sys
+       37.24 real         0.01 user         0.10 sys
+       37.47 real         0.01 user         0.09 sys
+       37.13 real         0.01 user         0.09 sys
+       37.09 real         0.01 user         0.09 sys
+       37.33 real         0.01 user         0.10 sys
+       36.87 real         0.01 user         0.10 sys
+       37.84 real         0.01 user         0.10 sys
+       37.84 real         0.01 user         0.09 sys
+mean: 37.673
+37.673 / 13.980363 = 2.694
+standard diviation: 0.562

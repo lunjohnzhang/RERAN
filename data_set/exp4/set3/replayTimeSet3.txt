@@ -1,0 +1,44 @@
+       21.31 real         0.00 user         0.04 sys
+       20.13 real         0.00 user         0.04 sys
+       20.58 real         0.00 user         0.04 sys
+       20.62 real         0.00 user         0.04 sys
+       20.71 real         0.00 user         0.04 sys
+       19.45 real         0.00 user         0.04 sys
+       20.52 real         0.00 user         0.04 sys
+       20.93 real         0.00 user         0.04 sys
+       21.02 real         0.00 user         0.04 sys
+       20.30 real         0.00 user         0.04 sys
+       20.27 real         0.00 user         0.04 sys
+       21.12 real         0.00 user         0.04 sys
+       20.58 real         0.00 user         0.04 sys
+       19.77 real         0.00 user         0.04 sys
+       20.27 real         0.00 user         0.04 sys
+       20.58 real         0.00 user         0.03 sys
+       19.91 real         0.00 user         0.04 sys
+       21.33 real         0.00 user         0.04 sys
+       20.27 real         0.00 user         0.04 sys
+       20.10 real         0.00 user         0.04 sys
+       19.45 real         0.00 user         0.04 sys
+       20.61 real         0.00 user         0.03 sys
+       20.74 real         0.00 user         0.04 sys
+       20.60 real         0.00 user         0.04 sys
+       21.02 real         0.00 user         0.04 sys
+       20.61 real         0.00 user         0.04 sys
+       20.68 real         0.00 user         0.04 sys
+       20.44 real         0.00 user         0.04 sys
+       21.54 real         0.00 user         0.04 sys
+       21.67 real         0.00 user         0.04 sys
+       20.73 real         0.00 user         0.04 sys
+       20.96 real         0.00 user         0.03 sys
+       21.10 real         0.00 user         0.04 sys
+       20.72 real         0.00 user         0.04 sys
+       20.92 real         0.00 user         0.04 sys
+       20.78 real         0.00 user         0.04 sys
+       21.19 real         0.00 user         0.04 sys
+       21.14 real         0.00 user         0.04 sys
+       20.77 real         0.00 user         0.04 sys
+       20.31 real         0.00 user         0.04 sys
+replay time is 8.74
+mean: 20.644
+standard diviation: 0.495
+error: 2.362

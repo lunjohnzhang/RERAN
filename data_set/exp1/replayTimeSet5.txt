@@ -1,0 +1,16 @@
+origin: 3152.163445 - 3109.146876 = 43.016569 
+      106.52 real         0.02 user         0.19 sys
+      104.89 real         0.02 user         0.21 sys
+      106.42 real         0.02 user         0.19 sys
+      112.56 real         0.03 user         0.20 sys
+      112.61 real         0.02 user         0.20 sys
+      114.33 real         0.03 user         0.20 sys
+      114.07 real         0.03 user         0.20 sys
+      114.71 real         0.03 user         0.21 sys
+      110.43 real         0.03 user         0.20 sys
+      103.51 real         0.02 user         0.19 sys
+      105.14 real         0.02 user         0.20 sys
+      105.55 real         0.02 user         0.20 sys
+mean: 109.228
+109.228 / 43.016569 = 2.539
+standard diviation: 4.08742

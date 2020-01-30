@@ -1,0 +1,33 @@
+add device 1: /dev/input/event15
+  name:     "es705 input"
+add device 2: /dev/input/event14
+  name:     "w1"
+add device 3: /dev/input/event12
+  name:     "hrm_sensor"
+add device 4: /dev/input/event11
+  name:     "ssp_context"
+add device 5: /dev/input/event10
+  name:     "meta_event"
+add device 6: /dev/input/event9
+  name:     "step_cnt_sensor"
+add device 7: /dev/input/event8
+  name:     "sig_motion_sensor"
+add device 8: /dev/input/event7
+  name:     "temp_humidity_sensor"
+add device 9: /dev/input/event6
+  name:     "proximity_sensor"
+add device 10: /dev/input/event5
+  name:     "light_sensor"
+add device 11: /dev/input/event4
+  name:     "gesture_sensor"
+add device 12: /dev/input/event3
+  name:     "qpnp_pon"
+add device 13: /dev/input/event0
+  name:     "sii8240_rcp"
+could not get driver version for /dev/input/mice, Not a typewriter
+add device 14: /dev/input/event13
+  name:     "gpio-keys"
+add device 15: /dev/input/event1
+  name:     "sec_touchkey"
+add device 16: /dev/input/event2
+  name:     "sec_touchscreen"

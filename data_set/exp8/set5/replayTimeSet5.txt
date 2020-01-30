@@ -1,0 +1,24 @@
+       15.24 real         0.00 user         0.03 sys
+       14.80 real         0.00 user         0.02 sys
+       14.87 real         0.00 user         0.03 sys
+       15.33 real         0.00 user         0.02 sys
+       15.42 real         0.00 user         0.03 sys
+       14.41 real         0.00 user         0.03 sys
+       14.71 real         0.00 user         0.05 sys
+       14.91 real         0.00 user         0.03 sys
+       15.00 real         0.00 user         0.03 sys
+       15.33 real         0.00 user         0.03 sys
+       15.23 real         0.00 user         0.03 sys
+       15.10 real         0.00 user         0.03 sys
+       15.07 real         0.00 user         0.03 sys
+       14.94 real         0.00 user         0.03 sys
+       14.91 real         0.00 user         0.03 sys
+       14.89 real         0.00 user         0.03 sys
+       15.19 real         0.00 user         0.03 sys
+       15.20 real         0.00 user         0.03 sys
+       14.95 real         0.00 user         0.03 sys
+       14.79 real         0.00 user         0.03 sys
+replay time is 10.156
+mean: 15.014
+standard diviation: 0.241
+error: 1.478
