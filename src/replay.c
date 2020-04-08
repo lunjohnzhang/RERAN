@@ -342,7 +342,7 @@ int main(int argc, char *argv[])
 						goSleep(0);
 					}
 					else {
-						goSleep(timePoints[j]/1000.0 - currTimePoint);
+						goSleep(timePoints[j] - currTimePoint*1000);
 					}
 					if(toSleep < 0) {
 						sleepDeficit += 0 - toSleep;
