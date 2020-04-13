@@ -54,7 +54,7 @@ void goSleep(uint64_t nsec)
 
 	t0->tv_sec = (long)(nsec / 1000000000);
 	t0->tv_nsec = (long)(nsec % 1000000000);
-	
+
 	//printf("Sleeping for %lu sec, %lu nsec\n", t0->tv_sec, t0->tv_nsec);
 
 	while ((nanosleep(t0, t1) == (-1)) && (errno == EINTR))
@@ -93,36 +93,35 @@ void goSleep(uint64_t nsec)
 // end <linux/input.h>
 
 #define ARRAYSIZE(x)  (sizeof(x)/sizeof(*(x)))
- 
+
 
 int main(int argc, char *argv[])
 {
-		
 	if(argc == 1)
 	{
 		printf("ERROR: Please specify the location of the event file\n\n");
 		exit(1);
 	}
-	
+
 	int returned = 0;
 	long lineNumbers = 0;
 
 
 	FILE *fl = fopen(argv[2], "r"); // localLatency.txt
 	FILE *file = fopen(argv[1], "r"); // translatedEvents.txt
-	
+
 	if(file && fl)
 	{
 
 		size_t i, j, k, l, m, x;
-		
+
 		char buffer[BUFSIZ], *ptr;
 		fgets(buffer, sizeof buffer, file);
 		ptr = buffer;
 		lineNumbers = (long)strtol(ptr, &ptr, 10);
-		
+
 		printf("\n\nLine Numbers = %lu\n\n", lineNumbers);
-		
+
 
 		// ************************************************
 		// read in local latency
@@ -146,14 +145,14 @@ int main(int argc, char *argv[])
 		unsigned short * typeData;
 		unsigned long * valueData;
 		uint64_t * timeArray;
-		
+
 		eventType = (unsigned short *) calloc((lineNumbers*1), sizeof(unsigned short));
 		codeData = (unsigned short *) calloc((lineNumbers*1), sizeof(unsigned short));
 		typeData = (unsigned short *) calloc((lineNumbers*1), sizeof(unsigned short));		
 		valueData = (unsigned long *) calloc((lineNumbers*1), sizeof(unsigned long));
 		timeArray = (uint64_t *) calloc((lineNumbers*1), sizeof(uint64_t));
-		
-	
+
+
 		if(eventType == NULL)
 			printf("eventType failed malloc\n");
 		if(codeData == NULL)
@@ -164,10 +163,10 @@ int main(int argc, char *argv[])
 			printf("valueData failed malloc\n");
 		if(timeArray == NULL)
 			printf("timeArray failed malloc\n");
-	
-		
+
+
 		int everyOther = 0;
-	
+
 		for(i = 0, l = 0, m = 0; fgets(buffer, sizeof buffer, file); ++i)
 		{
 			if(everyOther == 1)
@@ -175,22 +174,22 @@ int main(int argc, char *argv[])
 				for(j = 0, ptr = buffer; j < 4; ++j, ++ptr)
 				{
 					if(j == 0)
-						eventType[m] = (unsigned short)strtoul(ptr, &ptr, 10);						
+						eventType[m] = (unsigned short)strtoul(ptr, &ptr, 10);
 					else if(j == 1)
 						codeData[m] = (unsigned short)strtoul(ptr, &ptr, 10);
 					else if(j == 2)
 						typeData[m] = (unsigned short)strtoul(ptr, &ptr, 10);
 					else if(j == 3)
-						valueData[m] = (unsigned long)strtoul(ptr, &ptr, 10);					
+						valueData[m] = (unsigned long)strtoul(ptr, &ptr, 10);
 				}
-				
+
 				m++;
-				everyOther = 0;					
+				everyOther = 0;
 			}
 			else
 			{
 				ptr = buffer;
-				timeArray[l] = (uint64_t)strtoull(ptr, &ptr, 10);		
+				timeArray[l] = (uint64_t)strtoull(ptr, &ptr, 10);
 				everyOther = 1;
 				l++;
 			}
@@ -208,7 +207,7 @@ int main(int argc, char *argv[])
 		}
 
 		// *******************************************************************
-		
+
 
 		//========		Start Sending Events		============
 
@@ -218,7 +217,7 @@ int main(int argc, char *argv[])
 
 		char* deviceP = device;
 		int fd;
-		
+
 		j=0,k=0;
 		// *******************************************************************
 		// variables needed for interval calculation
@@ -253,14 +252,14 @@ int main(int argc, char *argv[])
 
 			int ret; // can be moved out
 			int version; // can be moved out
-		
+
 			// Make sure opening the device opens properly
 			if(fd <= 0)
 			{
 				fprintf(stderr, "could not open %s, %s\n", *(&deviceP), strerror(errno));
 				return 1;
 			}
-			
+
 			// system call: get the version of the driver of the device
 			// since need to check for every event file, not able to optimize
 			if (ioctl(fd, EVIOCGVERSION, &version)) 
@@ -268,11 +267,11 @@ int main(int argc, char *argv[])
 				fprintf(stderr, "could not get driver version for %s, %s\n", *(&deviceP), strerror(errno));
 				return 1;
 			}
-			
+
 			struct input_event checkEvent[5];
-			int valid = 0;			
-			
-			// need discussion: 
+			int valid = 0;
+
+			// need discussion:
 			// if the time interval of two events is less than 10^-6, adb getevent tool would think of them as they happens at the same time.
 			// Therefore, the following code is detecting these events, write them together, and avoid sleeping.
 
@@ -293,14 +292,22 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
+				// ********************************* Original *********************************
 				// Sleep for time interval calculated in Translate
-				//printf("%d. ", k);
+				// printf("%d. ", k);
 				// goSleep(timeArray[j]);
+				// ******************************* End Original *******************************
 
-				// *****************************************************************************
-				// experiment: sleep for less time than orginally required
-				// toSleep = timeArray[j] - 17516380;
-				// // printf("To sleep: %lld \n", toSleep);
+				// ********************************* Exp7 Set1 *********************************
+				// subjuect: sleep for less time than orginally required
+				toSleep = timeArray[j] >= 12012807 ? timeArray[j] - 12012807 : 0; // value if pre-calculated
+				goSleep(toSleep); // nanoseconds
+				// printf("j = %zd k = %zd\n", j, k);
+				// printf("To sleep: %lld \n", toSleep);
+				// ******************************** End Exp7 Set1 ******************************
+
+				// ***************************** Exp7 Set3 and set4 ****************************
+				// subjuect: sleeping deficit method
 				// // if current sleeping time is smaller than 0, add the extra sleeping time to deficit
 				// if(toSleep < 0) {
 				// 	goSleep(0);
@@ -314,43 +321,40 @@ int main(int argc, char *argv[])
 				// 	goSleep(toSleep - sleepDeficit);
 				// 	sleepDeficit = 0;
 				// }
-				// *****************************************************************************
-				// normal/extreme sectional sleeping deficit method
+				// normal(set3) and sectional(set4) sleeping deficit method
+				// flip set 3 and 4 here
 				// toSleep = timeArray[j] - 15880768;
+				// toSleep = timeArray[j] - lLatency[j]*1000;
+
+				// debug code
 				// printf("j = %zd k = %zd\n", j, k);
 				// printf("current latency: %lld\n", lLatency[j]);
-				
-				toSleep = timeArray[j] - lLatency[j]*1000;
-				
 				// printf("timeArray[%zd] - p%zd = %lld - %lld = %lld\n", j, j, timeArray[j], lLatency[j]*1000, timeArray[j] - lLatency[j]*1000);
 				// printf("current toSleep: %lld\n", toSleep);
-				// if(toSleep > 0) {
-				// 	goSleep(toSleep);
-				// }
-				// else{
-				// 	goSleep(0);
+				// **************************** End Exp7 Set3 and Set4 **************************
+
+
+				// ********************************** Exp8 *********************************
+				// get current time from start in microseconds
+				// if (!gettimeofday(&currTime, NULL))
+				// {
+				// 	currTimePoint = ((long long int)currTime.tv_sec) * 1000000ll + (long long int)currTime.tv_usec;
 				// }
 
-				// get current time from start
-				if (!gettimeofday(&currTime, NULL))
-				{
-					currTimePoint = ((long long int)currTime.tv_sec) * 1000000ll + (long long int)currTime.tv_usec;
-				}
-				// **************************
-				if (toSleep < 0 || toSleep - sleepDeficit < 0) {
-					if(currTimePoint >= timePoints[j]/1000.0) {
-						goSleep(0);
-					}
-					else {
-						goSleep(timePoints[j] - currTimePoint*1000);
-					}
-					if(toSleep < 0) {
-						sleepDeficit += 0 - toSleep;
-					}
-					else {
-						sleepDeficit -= sleepDeficit - toSleep;
-					}
-				}
+				// if (toSleep < 0 || toSleep - sleepDeficit < 0) {
+				// 	if(currTimePoint >= timePoints[j]/1000.0) {
+				// 		goSleep(0);
+				// 	}
+				// 	else {
+				// 		goSleep(timePoints[j] - currTimePoint*1000);
+				// 	}
+				// 	if(toSleep < 0) {
+				// 		sleepDeficit += 0 - toSleep;
+				// 	}
+				// 	else {
+				// 		sleepDeficit -= sleepDeficit - toSleep;
+				// 	}
+				// }
 				// else if (toSleep - sleepDeficit < 0) {
 				// 	if (currTimePoint >= timePoints[j]) {
 				// 		goSleep(0);
@@ -358,15 +362,14 @@ int main(int argc, char *argv[])
 				// 	else {
 				// 		goSleep(timePoints[j] - currTimePoint);
 				// 	}
-					
 				// }
-				else {
-					goSleep(toSleep - sleepDeficit);
-					sleepDeficit = 0;
-				}
+				// else {
+				// 	goSleep(toSleep - sleepDeficit);
+				// 	sleepDeficit = 0;
+				// }
 				// printf("current deficit: %lld nanoseconds\n", sleepDeficit);
 
-				// *****************************************************************************	
+				// ********************************* End Exp8 ***********************************
 				checkEvent[0].type = codeData[k];
 				checkEvent[0].code = typeData[k];
 				checkEvent[0].value = valueData[k];
@@ -374,64 +377,18 @@ int main(int argc, char *argv[])
 				k++;
 				valid = 1;
 			}
-			
+
 			struct input_event event[valid];
 			memset(&event, 0, sizeof(event));
-			
+
 			for(x = 0; x < valid; x++)
 			{
 				event[x].type = checkEvent[x].type;
 				event[x].code = checkEvent[x].code;
 				event[x].value = checkEvent[x].value;
 			}
-					
-			// get the current timeStamp and calculate the time interval by microseconds
-			/* Example of timestamp in microsecond. */
-			// struct timeval timer_usec;
-			// long long int timestamp_usec; /* timestamp in microsecond */
-			// if (!gettimeofday(&timer_usec, NULL))
-			// {
-			// 	timestamp_usec = ((long long int)timer_usec.tv_sec) * 1000000ll +
-			// 					 (long long int)timer_usec.tv_usec;
-			// }
-			// else
-			// {
-			// 	timestamp_usec = -1;
-			// }
-			// micros = timestamp_usec;
-			// if (firstLoop == 1)
-			// {
-			// 	firstLoop = 0;
-			// 	prevMicros = micros;
-			// }
-			// else
-			// {
-			// 	// printf("microseconds: %lld \n", micros - prevMicros);
-			// 	prevMicros = micros;
-			// }
-			
 
-			// struct timespec tms;
-			// if (clock_gettime(CLOCK_REALTIME, &tms))
-			// {
-			// 	return -1;
-			// }
-			// /* seconds, multiplied with 1 billion */
-			// micros = tms.tv_sec * 1000000000;
-			// /* Add full microseconds */
-			// micros += tms.tv_nsec;
-			// if(firstLoop == 1){
-			// 	firstLoop = 0;
-			// 	prevMicros = micros;
-			// }
-			// else{
-			// 	printf("microseconds: %" PRId64 "\n", micros-prevMicros);
-			// 	prevMicros = micros;
-			// }
-
-			// get time point
-			// ***************************************************************
-			// profile the following code
+			// ************************ Get time point ***************************
 			struct timeval timer_usec_tp;
 			long long int timestamp_usec_tp; /* timestamp in microsecond */
 			if (!gettimeofday(&timer_usec_tp, NULL))
@@ -451,7 +408,7 @@ int main(int argc, char *argv[])
 			else {
 				printf("time elapsed from t0: %lld \n\n", timestamp_usec_tp - initTimePoint); // microseconds
 			}
-			// ***************************************************************
+			// ************************ End get time point ************************
 
 			// ** Write the event that we just got from checkEvent **
 			ret = write(fd, &event, sizeof(event));
@@ -469,7 +426,7 @@ int main(int argc, char *argv[])
 		//perror(filename);
 		perror(argv[1]);
 	}
-	
+
 	return 0;
 }
 
