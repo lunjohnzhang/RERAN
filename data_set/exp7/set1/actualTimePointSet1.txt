@@ -1,3 +1,4 @@
+point 0: 0.0
 point 1: 39.0
 point 2: 1303.0
 point 3: 55.0

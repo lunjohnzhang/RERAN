@@ -2,6 +2,7 @@
 
 Line Numbers = 438
 
+time elapsed from t0: 0 
 time elapsed from t1: 495 
 time elapsed from t1: 9179 
 time elapsed from t1: 19150 
