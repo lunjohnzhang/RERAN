@@ -125,8 +125,8 @@ int main(int argc, char *argv[])
 
 		// ************************************************
 		// read in local latency
-		int64_t *lLatency;
-		lLatency = (int64_t*) calloc((lineNumbers*1), sizeof(int64_t));
+		double *lLatency;
+		lLatency = (double*) calloc((lineNumbers*1), sizeof(double));
 		lLatency[0] = 0;
 		char line[255];
 		char *ptr_;
@@ -299,32 +299,33 @@ int main(int argc, char *argv[])
 				// ******************************* End Original *******************************
 
 				// ********************************* Exp7 Set1 *********************************
-				// subjuect: sleep for less time than orginally required
-				toSleep = timeArray[j] >= 12012807 ? timeArray[j] - 12012807 : 0; // value if pre-calculated
-				goSleep(toSleep); // nanoseconds
+				// // subjuect: sleep for less time than orginally required
+				// toSleep = timeArray[j] >= 12012807 ? timeArray[j] - 12012807 : 0; // value is pre-calculated
+				// goSleep(toSleep); // nanoseconds
 				// printf("j = %zd k = %zd\n", j, k);
 				// printf("To sleep: %lld \n", toSleep);
 				// ******************************** End Exp7 Set1 ******************************
 
 				// ***************************** Exp7 Set3 and set4 ****************************
 				// subjuect: sleeping deficit method
-				// // if current sleeping time is smaller than 0, add the extra sleeping time to deficit
-				// if(toSleep < 0) {
-				// 	goSleep(0);
-				// 	sleepDeficit += 0 - toSleep;
-				// }
-				// else if (toSleep - sleepDeficit < 0) {
-				// 	goSleep(0);
-				// 	sleepDeficit -= sleepDeficit - toSleep;
-				// }
-				// else {
-				// 	goSleep(toSleep - sleepDeficit);
-				// 	sleepDeficit = 0;
-				// }
 				// normal(set3) and sectional(set4) sleeping deficit method
 				// flip set 3 and 4 here
-				// toSleep = timeArray[j] - 15880768;
-				// toSleep = timeArray[j] - lLatency[j]*1000;
+				// toSleep = (int64_t)timeArray[j] - 12012807; // value is pre-calculated
+				toSleep = (int64_t)timeArray[j] - (int64_t)(lLatency[j]*1000);
+
+				// if current sleyping time is smaller than 0, add the extra sleeping time to deficit
+				if(toSleep < 0) {
+					goSleep(0);
+					sleepDeficit += 0 - toSleep;
+				}
+				else if (toSleep - sleepDeficit < 0) {
+					goSleep(0);
+					sleepDeficit -= sleepDeficit - toSleep;
+				}
+				else {
+					goSleep(toSleep - sleepDeficit);
+					sleepDeficit = 0;
+				}
 
 				// debug code
 				// printf("j = %zd k = %zd\n", j, k);
