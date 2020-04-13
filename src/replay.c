@@ -403,10 +403,10 @@ int main(int argc, char *argv[])
 			if(firstLoop_tp == 1) {
 				initTimePoint = timestamp_usec_tp;
 				firstLoop_tp = 0;
-				printf("time elapsed from t0: %d \n\n", 0); // microseconds
+				printf("time elapsed from t0: %d \n", 0); // microseconds
 			}
 			else {
-				printf("time elapsed from t0: %lld \n\n", timestamp_usec_tp - initTimePoint); // microseconds
+				printf("time elapsed from t0: %lld \n", timestamp_usec_tp - initTimePoint); // microseconds
 			}
 			// ************************ End get time point ************************
 
