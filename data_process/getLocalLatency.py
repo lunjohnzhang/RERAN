@@ -5,6 +5,7 @@
 # argv[2]: actualTimePoint.txt
 #######
 import sys
+import numpy as np
 
 def readReplayedTimePoint(file):
     try:
@@ -23,7 +24,7 @@ def readReplayedTimePoint(file):
             i = int(line.split("=")[1].strip())
             j += 1
             count = 0
-            while count < i:
+            while count < i-1:
                 line = lines[j]
                 j += 1
                 if "time elapsed from" in line:
@@ -46,15 +47,12 @@ def readActualTimePoint(file):
     timePointBlocks = []
     for line in lines:
         timePointBlocks.append(float(line.split(":")[1].strip()))
-    # print(len(timePointBlocks))
-    # print(timePointBlocks)
-    return timePointBlocks
+    return timePointBlocks[1:]
 
 def takeDifference(replay, actual):
     difference = []
     for i, replayTP in enumerate(replay):
         difference.append(replayTP - actual[i])
-        # print("replay" + "[" + str(i) + "]" + " - actual" + "[" + str(i) + "]" + " = " + str(replayTP) + " - " + str(actual[i]) + " = " + str(replayTP - actual[i]))
     return difference
 
 def approxLatency(difference):
@@ -63,13 +61,18 @@ def approxLatency(difference):
     for i in range(1, len(difference)):
         result.append(difference[i] - difference[i-1])
         # print("difference[i] - difference[i-1] = " + str(difference[i]) + " - " + str(difference[i-1]) + " = " + str(difference[i] - difference[i-1]))
-    
+
     # print the result
+    print(0) # make the number same as timeArray in replay.c
     for p in result:
         print(p)
     return result
 
-replayTimePointsBlock = readReplayedTimePoint(sys.argv[1])
-actualTimePoints = readActualTimePoint(sys.argv[2])
-difference = takeDifference(replayTimePointsBlock[0], actualTimePoints)
+replayTimePointsBlock = np.array(readReplayedTimePoint(sys.argv[1]))
+actualTimePoints = np.array(readActualTimePoint(sys.argv[2]))
+
+difference = np.zeros(actualTimePoints.shape[0])
+for i in range(replayTimePointsBlock.shape[0]):
+    difference += takeDifference(replayTimePointsBlock[i], actualTimePoints)
+difference /= replayTimePointsBlock.shape[0]
 approxLatency(difference)
