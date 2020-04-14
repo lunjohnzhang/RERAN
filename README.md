@@ -1,3 +1,13 @@
+RERAN Reboot Research Project
+====
+This repository is forked from the original RERAN repository, aiming to reseach the tool and expand its usability. During our research, we found a lagging issue residing in RERAN that causes the replay to be significantly slower than record. We designed several experiments to identify the issue and proposed several fixes to the original RERAN program.
+
+#### Structure of the repository
+`command/` contains bash commands to run the experiments.
+`data_process/` contains python scripts to process experimental data.
+`data_set/` contains all of the experimental data. This is a README in each experiment folder that briefly explains the purpose of the experiment. The results could be found in the jupyter notebooks under the folder.
+`origin/` contains the original RERAN source code.
+`src/` contains the modified RERAN source code.
 
 RERAN
 =====
@@ -7,7 +17,7 @@ Record and Replay for Android
 
 The preferred license for RERAN is the BSD License.
 
-####Getting Started
+#### Getting Started
 
 Getting started with RERAN is easy. The instructions below assume you
 have the Android SDK installed on your computer (runs on Linux, Mac, 
@@ -17,7 +27,7 @@ phone and run the record and replay commands. The ./adb tool is in the
 performs our standard record and replay. For the selective replay and 
 time-warping features, please see their respective pages.
 
-####RERAN Design
+#### RERAN Design
 
 First, recording with getevent will create a log of the events used 
 during the run, e.g., recordedEvents.txt. Second, send the recorded 
@@ -27,7 +37,7 @@ log, e.g., translatedEvents.txt, onto the phone. Fourth, run the Replay
 program using the adb shell.
 
 
-####ARM Cross-compiler
+#### ARM Cross-compiler
 
 In order for the replay program to run on Android devices, they must be compiled using a cross-compiler for ARM CPU's. If you already have an ARM cross-compiler on your computer, then you are ready to go. If not, please find one that works with your operating system. The executable contained in our release was compiled on Linux. From our experience, finding and installing an ARM cross-compiler for Mac was difficult; it is possible, but included many hacks to get going, and is not recommended. 
 
@@ -39,7 +49,7 @@ After the ARM cross-compiler is installed, you can compile the source code using
   arm-none-linux-gnueabi-gcc -static -o replay replay.c
 ```
 
-####Running Example
+#### Running Example
 
 Push replay tool onto the phone: "/data/local" will be our local 
 directory on the phone for the RERAN files. If it does not exist, it 
