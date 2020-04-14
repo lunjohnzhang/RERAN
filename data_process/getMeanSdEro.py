@@ -7,6 +7,7 @@
 
 import math
 import sys
+from utils import round_up
 
 # function to calculate the mean and standard diviation
 def getMean(replayTimes):
@@ -21,10 +22,6 @@ def getStandardDiviation(replayTimes):
 		total += math.pow(time - mean, 2)
 	sd = math.sqrt(total/len(replayTimes))
 	return sd 
-
-def round_up(value):
-	# replace round function to implement precise rounding of the 3rd digit
-    return round(value * 1000) / 1000.0
 
 # read in recordedEvent and calculate the total time of the events recorded
 recorded = open(sys.argv[1])

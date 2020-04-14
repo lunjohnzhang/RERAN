@@ -3,10 +3,7 @@
 # argv[1]: recordedEvents.txt
 #######
 import sys
-
-def round_up(value):
-	# replace round function to implement precise rounding of the 3rd digit
-    return round(value * 1000) / 1000.0
+from utils import round_up
 
 recorded = open(sys.argv[1])
 lines = recorded.readlines()
