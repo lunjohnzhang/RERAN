@@ -48,11 +48,10 @@ else {
 	goSleep(toSleep - sleepDeficit);
 	sleepDeficit = 0;
 }
+```
 
 ### Important!!
 Note that while running the test for sectional deficit, you need to use data_process/getLocalLatency.py to calculate the latency values. This part is not automatically included in the testing pipline. BE CAREFUL!!
-
-```
 
 # Data Sets
 set1: Calculator app on samsumg S5 with brute force fix
