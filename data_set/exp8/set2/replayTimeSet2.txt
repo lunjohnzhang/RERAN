@@ -18,7 +18,7 @@
        12.37 real         0.00 user         0.02 sys
        11.51 real         0.00 user         0.02 sys
        11.47 real         0.00 user         0.02 sys
-replay time is 10.156
+record time is 10.156
 mean: 11.518
 standard diviation: 0.235
 error: 1.134
@@ -50,4 +50,4 @@ error: no devices/emulators found
         6.27 real         0.00 user         0.02 sys
         6.81 real         0.00 user         0.02 sys
         6.77 real         0.00 user         0.02 sys
-replay time is 10.156
+record time is 10.156

@@ -18,7 +18,7 @@
        16.38 real         0.00 user         0.03 sys
        16.56 real         0.00 user         0.03 sys
        16.95 real         0.00 user         0.03 sys
-replay time is 10.625
+record time is 10.625
 mean: 16.582
 standard diviation: 0.285
 error: 1.561

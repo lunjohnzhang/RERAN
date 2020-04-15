@@ -39,7 +39,7 @@
        28.43 real         0.00 user         0.04 sys
        27.23 real         0.00 user         0.04 sys
 calculator(Samsung S5)
-eplay time is 17.894
-mean: 27.122
+record time is 17.894
+replay mean: 27.122
 standard diviation: 0.424
 error: 1.516

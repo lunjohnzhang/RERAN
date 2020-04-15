@@ -39,7 +39,7 @@
        21.61 real         0.00 user         0.05 sys
        21.71 real         0.00 user         0.05 sys
 angry bird
-replay time is 9.022
-mean: 21.979
+record time is 9.022
+replay mean: 21.979
 standard diviation: 0.349
 error: 2.436

@@ -35,7 +35,7 @@ for line in lines:
         times.append(float(time))
 
 recordInterval = times[len(times) - 1] - times[0]
-print("replay time is " + str(round_up(recordInterval)))
+print("record time is " + str(round_up(recordInterval)))
 
 # read in all of the replaytime and calculate the mean and standard diviation
 allReplay = open(sys.argv[2])
