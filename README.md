@@ -7,7 +7,7 @@ This repository is forked from the original RERAN repository, aiming to reseach 
 
 `data_process/` contains python scripts to process experimental data.
 
-`data_set/` contains all of the experimental data. This is a README in each experiment folder that briefly explains the purpose of the experiment. The results could be found in the jupyter notebooks under the folder.
+`data_set/` contains all of the experimental data. There is a README in each experiment folder that briefly explains the purpose of the experiment. The results could be found in the jupyter notebooks under the folder.
 
 `origin/` contains the original RERAN source code.
 
