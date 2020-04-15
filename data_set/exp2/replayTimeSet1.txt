@@ -38,3 +38,4 @@
        16.73 real         0.00 user         0.03 sys
        16.81 real         0.00 user         0.02 sys
        16.86 real         0.00 user         0.03 sys
+record time is 12.512803

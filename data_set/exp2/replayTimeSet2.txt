@@ -39,3 +39,4 @@
        17.02 real         0.00 user         0.00 sys
        17.02 real         0.00 user         0.00 sys
 setting app on Samsung S2
+record time is 11.53
