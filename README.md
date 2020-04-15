@@ -59,8 +59,7 @@ flag is to timestamp each event (used by the Translator in the next step).
     ./adb shell getevent -tt > recordedEvents.txt
 ```
 
-Run the Translate program: The first two arguments of the Translate program are the path to the recorded events and the name of the translated events to output, respectively. There are also extra flags: see selective 
-replay and time-warping.
+Run the Translate program: The first two arguments of the Translate program are the path to the recorded events and the name of the translated events to output, respectively. There are also extra flags: see selective replay and time-warping.
 ```
     cd /path/to/translate.jar/
 
