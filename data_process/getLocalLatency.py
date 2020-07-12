@@ -1,5 +1,5 @@
 #######
-# getLocalLatency.py: approximate the local p value for each time point except the first one by calculating slope two each of the two ajacent points
+# getLocalLatency.py: approximate the local p value for each time point except the first one by calculating slope of every two ajacent points
 # Formula: pi = ki = (yi - yi-1)/(xi - xi-1) = yi - yi-1
 # argv[1]: replayTimePoint.txt
 # argv[2]: actualTimePoint.txt
@@ -26,6 +26,6 @@ actualTimePoints = np.array(readActualTimePoint(sys.argv[2]))
 
 difference = np.zeros(actualTimePoints.shape[0])
 for i in range(replayTimePointsBlock.shape[0]):
-    difference += takeDifference(replayTimePointsBlock[i], actualTimePoints)
+    difference += replayTimePointsBlock[i] - actualTimePoints
 difference /= replayTimePointsBlock.shape[0]
 approxLatency(difference)

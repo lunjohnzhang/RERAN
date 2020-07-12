@@ -5,11 +5,10 @@ def takeFirst(ele):
 
 def main():
     fileIn = open(sys.argv[1], "r")
-    fileOut = open("sortedEvents.txt", "w")
     data = []
     for line in fileIn:
         if(line[0] != "["):
-           fileOut.write(line)
+           print(line, end = "")
         else:
             lineTemp = line.replace("[", "")
             lineTemp = lineTemp.replace(" ", "")
@@ -19,7 +18,7 @@ def main():
             data.append((timeStamp, line))
     data.sort(key = takeFirst)
     for ele in data:
-        fileOut.write(ele[1])
+        print(ele[1], end="")
 
 if __name__ == "__main__" :
     main()

@@ -22,7 +22,7 @@ def readReplayedTimePoint(file):
             i = int(line.split("=")[1].strip())
             j += 1
             count = 0
-            while count < i-1:
+            while count < i:
                 line = lines[j]
                 j += 1
                 if "time elapsed from" in line:
@@ -45,7 +45,7 @@ def readActualTimePoint(file):
     timePointBlocks = []
     for line in lines:
         timePointBlocks.append(float(line.split(":")[1].strip()))
-    return timePointBlocks[1:]
+    return timePointBlocks
 
 def takeDifference(replay, actual):
     difference = []
