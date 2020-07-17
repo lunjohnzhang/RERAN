@@ -112,13 +112,18 @@ def plot_regression_line(x, y, b):
 
 
 def construct_x(n):
-    result = []
-    for i in range(0, n):
-        result.append(i)
-    return result
+    return np.arange(n)
 
 
-def linear_regression(y_difference, n):
+def linear_regression(y_difference, n, log=True, plot=True):
+    """python application of linear regression
+
+    Args:
+        y_difference: array of y values
+        n: number of values in y
+
+    Note: I am too lazy to change this to more mature ML packages
+    """
     # observations
     x = np.array(construct_x(n))
     y = np.array(y_difference)
@@ -126,21 +131,30 @@ def linear_regression(y_difference, n):
     # estimating coefficients
     b = estimate_coef(x, y)
     error = getErrorPearson(y_difference)
-    print("Estimated coefficients:\n b_0 = {} \n b_1 = {}".format(b[0], b[1]))
-    print("Pearson error: " + str(error))
+
+    # log result
+    if log:
+        print("Estimated coefficients:\n b_0 = {} \n b_1 = {}".format(b[0], b[1]))
+        print("Pearson error: " + str(error))
+
     # plotting regression line
-    plot_regression_line(x, y, b)
+    if plot:
+        plot_regression_line(x, y, b)
     return [b[0], b[1], error]
 
 
-def plot_regression_line_multi(x1, y1, b_a, x2, y2, b_b):
+def plot_regression_line_multi(x1, y1, param1, x2, y2, param2):
+    """Plot two regression lines
+
+    Note: for a line y=kx+b: param[0] = b, param[1] = k
+    """
     # plotting the actual points as scatter plot
     plt.scatter(x1, y1, color="b", marker="o", s=30, label="before fix")  # old
     plt.scatter(x2, y2, color="r", marker="o", s=30, label="after fix")  # new
 
     # predicted response vector
-    y_pred1 = b_a[0] + b_a[1]*x1
-    y_pred2 = b_b[0] + b_b[1]*x2
+    y_pred1 = param1[0] + param1[1]*x1
+    y_pred2 = param2[0] + param2[1]*x2
 
     # plotting the regression line
     plt.plot(x1, y_pred1, color="g")
@@ -164,23 +178,51 @@ def linear_regression_multi(y_difference1, n1, y_difference2, n2):
     y2 = np.array(y_difference2)
 
     # estimating coefficients
-    b_a = estimate_coef(x1, y1)
-    b_b = estimate_coef(x2, y2)
+    param1 = estimate_coef(x1, y1)
+    param2 = estimate_coef(x2, y2)
     print("Before fixing: ")
     print("Estimated coefficients:\n b_0_old = {} \n b_1_old = {}".format(
-        b_a[0], b_a[1]))
+        param1[0], param1[1]))
     print("Pearson error: " + str(getErrorPearson(y_difference1)))
     print("\nAfter fixing: ")
     print("Estimated coefficients:\n b_0_new = {} \n b_1_new = {}".format(
-        b_b[0], b_b[1]))
+        param2[0], param2[1]))
     print("Pearson error: " + str(getErrorPearson(y_difference2)))
     # plotting regression line
-    plot_regression_line_multi(x1, y1, b_a, x2, y2, b_b)
+    plot_regression_line_multi(x1, y1, param1, x2, y2, param2)
 
 ######End of Linear Regression ######
 
 
-def plotRecordActualCom(exp_num, set_num):
+def getRecordReplayDiff(exp_num, set_num):
+    """Get record-replay-diff curve.
+       Read in recorded and replayed time points, and take the difference.
+    """
+    replayTimePointsBlock = np.array(readReplayedTimePoint(
+        REPLAY_TIME_PT_PATH % (exp_num, set_num, set_num)))
+    actualTimePoints = np.array(readActualTimePoint(
+        ACTUAL_TIME_PT_PATH % (exp_num, set_num, set_num)))
+
+    # take the average difference between the record and replays
+    num_replay = replayTimePointsBlock.shape[0]
+    difference = np.zeros(actualTimePoints.shape[0])
+    for i in range(num_replay):
+        difference += np.array(takeDifference(
+            replayTimePointsBlock[i], actualTimePoints))
+    difference /= num_replay
+    return difference
+
+def approximateConstLatency(exp_num, set_num):
+    """Approximate constant latency value by applying
+       linear regression record-replay-diff curve.
+
+       return: approximated latency value in microseconds
+    """
+    difference = getRecordReplayDiff(exp_num, set_num)
+    _, k, _ = linear_regression(difference, len(difference), log=False, plot=False)
+    return round(k)
+
+def plotRecordActualCom(exp_num, set_num, axis=[0, 351, 0, 1.5e7]):
     """Plot recorded and replayed time points
     """
     replayTimePointsBlock = readReplayedTimePoint(
@@ -188,7 +230,7 @@ def plotRecordActualCom(exp_num, set_num):
     actualTimePoints = readActualTimePoint(
         ACTUAL_TIME_PT_PATH % (exp_num, set_num, set_num))
 
-    plt.axis([0, 351, 0, 1.5e7])
+    plt.axis(axis)
     plt.plot(replayTimePointsBlock[0], 'ro', label="replay")
     plt.plot(actualTimePoints, 'bo', label="actual")
     plt.legend()
@@ -198,19 +240,8 @@ def plotRecordActualCom(exp_num, set_num):
 def plotRecordActualDiff(exp_num, set_num, color='ro', label=None, axis=[0, 426, 0, 0.6*1e7]):
     """Plot difference curve of recorded and replayed time points
     """
-    replayTimePointsBlock = np.array(readReplayedTimePoint(
-        REPLAY_TIME_PT_PATH % (exp_num, set_num, set_num)))
-    actualTimePoints = np.array(readActualTimePoint(
-        ACTUAL_TIME_PT_PATH % (exp_num, set_num, set_num)))
-
-    # take the average difference between the record and 20 replays
-    num = replayTimePointsBlock.shape[0]
-    difference = np.zeros(actualTimePoints.shape[0])
-    for i in range(num):
-        difference += np.array(takeDifference(
-            replayTimePointsBlock[i], actualTimePoints))
-    difference /= num
-    plt.axis([0, 426, 0, 0.6*1e7])
+    difference = getRecordReplayDiff(exp_num, set_num)
+    plt.axis(axis)
     plt.plot(difference, color, label=label)
 
 
@@ -219,17 +250,8 @@ def plotFixComWithLR(exp_num_before, set_num_before, exp_num_after, set_num_afte
     Plot two sets of recorded and replayed time points
     with linear regression applied to compare performance
     """
-    replayTimePointsBlock = readReplayedTimePoint(
-        REPLAY_TIME_PT_PATH % (exp_num_before, set_num_before, set_num_before))
-    actualTimePoints = readActualTimePoint(ACTUAL_TIME_PT_PATH % (
-        exp_num_before, set_num_before, set_num_before))
-    difference = takeDifference(replayTimePointsBlock[0], actualTimePoints)
+    diff_before = getRecordReplayDiff(exp_num_before, set_num_before)
+    diff_after = getRecordReplayDiff(exp_num_after, set_num_after)
 
-    replayTimePointsBlock = readReplayedTimePoint(
-        REPLAY_TIME_PT_PATH % (exp_num_after, set_num_after, set_num_after))
-    actualTimePoints = readActualTimePoint(
-        ACTUAL_TIME_PT_PATH % (exp_num_after, set_num_after, set_num_after))
-    difference_exp = takeDifference(replayTimePointsBlock[0], actualTimePoints)
-
-    linear_regression_multi(difference, len(difference),
-                            difference_exp, len(difference_exp))
+    linear_regression_multi(diff_before, len(diff_before),
+                            diff_after, len(diff_after))
