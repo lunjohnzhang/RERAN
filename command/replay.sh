@@ -7,4 +7,4 @@ translate_events
 push_latency
 
 # run replay agent
-replay_with_latency
+replay $algo

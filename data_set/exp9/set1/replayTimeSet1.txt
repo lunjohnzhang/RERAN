@@ -1,0 +1,8 @@
+      577.81 real         0.08 user         0.60 sys
+record time is 182.924
+mean: 577.81
+standard diviation: 0.0
+error: 3.159
+Command terminated abnormally.
+       97.08 real         0.01 user         0.06 sys
+record time is 182.924

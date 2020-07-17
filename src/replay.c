@@ -65,6 +65,28 @@ void goSleep(uint64_t nsec)
 	}
 }
 
+// param read in functions
+int is_bruteforce(char *algo)
+{
+    return !strcmp(algo, "bruteforce");
+}
+
+int is_deficit(char *algo)
+{
+    return !strcmp(algo, "deficit");
+}
+
+int is_sec_deficit(char *algo)
+{
+    return !strcmp(algo, "sec_deficit");
+}
+
+int is_original(char *algo)
+{
+	return !strcmp(algo, "original");
+}
+
+
 // from <linux/input.h>
 #define EVIOCGVERSION		_IOR('E', 0x01, int)			/* get driver version */
 #define EVIOCGID		_IOR('E', 0x02, struct input_id)	/* get device ID */
@@ -97,22 +119,44 @@ void goSleep(uint64_t nsec)
 
 int main(int argc, char *argv[])
 {
-	if(argc == 1)
+	// read in the arguments
+	int opt;
+	char *algo = NULL;
+	char *latency = NULL;
+	char *trans = NULL;
+	while ((opt = getopt(argc, argv, ":t:a:l:")) != -1)
 	{
-		printf("ERROR: Please specify the location of the event file\n\n");
+		switch (opt)
+		{
+			case 't':
+				trans = optarg;
+			case 'a':
+				algo = optarg;
+				// printf("algorithm: %s\n", optarg);
+				break;
+			case 'l':
+				latency = optarg;
+				// printf("latency: %s\n", optarg);
+				break;
+			case ':': printf("option needs a value\n");
+				exit(1);
+			case '?':
+				printf("unknown option: %c\n", optopt);
+				exit(1);
+		}
+	}
+
+	if(algo == NULL)
+	{
+		printf("ERROR: Please specify type of scheduler to use\n\n");
 		exit(1);
 	}
 
-	int returned = 0;
+	// read in translated events
+	FILE *file = fopen(trans, "r"); // translatedEvents.txt
 	long lineNumbers = 0;
-
-
-	FILE *fl = fopen(argv[2], "r"); // localLatency.txt
-	FILE *file = fopen(argv[1], "r"); // translatedEvents.txt
-
-	if(file && fl)
+	if(file)
 	{
-
 		size_t i, j, k, l, m, x;
 
 		char buffer[BUFSIZ], *ptr;
@@ -121,23 +165,6 @@ int main(int argc, char *argv[])
 		lineNumbers = (long)strtol(ptr, &ptr, 10);
 
 		printf("\n\nLine Numbers = %lu\n\n", lineNumbers);
-
-
-		// ************************************************
-		// read in local latency
-		double *lLatency;
-		lLatency = (double*) calloc((lineNumbers*1), sizeof(double));
-		lLatency[0] = 0;
-		char line[255];
-		char *ptr_;
-		for(int i=1; i<lineNumbers; i++) {
-			fscanf(fl, "%s", line);
-			// printf("%d: %s\n", i, line );
-			ptr_ = line;
-			lLatency[i] = strtoll(ptr_, &ptr_, 10);
-		}
-		// ************************************************
-
 
 		// eventType will then match based on whatever is in the sendEvents.txt file
 		unsigned short * eventType;
@@ -148,7 +175,7 @@ int main(int argc, char *argv[])
 
 		eventType = (unsigned short *) calloc((lineNumbers*1), sizeof(unsigned short));
 		codeData = (unsigned short *) calloc((lineNumbers*1), sizeof(unsigned short));
-		typeData = (unsigned short *) calloc((lineNumbers*1), sizeof(unsigned short));		
+		typeData = (unsigned short *) calloc((lineNumbers*1), sizeof(unsigned short));
 		valueData = (unsigned long *) calloc((lineNumbers*1), sizeof(unsigned long));
 		timeArray = (uint64_t *) calloc((lineNumbers*1), sizeof(uint64_t));
 
@@ -195,6 +222,48 @@ int main(int argc, char *argv[])
 			}
 		}
 		fclose(file);
+
+		// *****************************************************************
+		// determine the scheduler algorithm and read in relevant params
+		long long *lLatency; // for sectional deficit
+		long long latency_val; // for bruteforce and deficit
+		// choose scheduler algorithm
+		if(is_bruteforce(algo))
+		{
+			latency_val = strtoll(latency, &latency, 10);
+		}
+		else if(is_deficit(algo))
+		{
+			latency_val = strtoll(latency, &latency, 10);
+		}
+		else if(is_sec_deficit(algo))
+		{
+			FILE *fl;
+			fl = fopen(latency, "r"); // localLatency.txt
+			// read in local latency
+			lLatency = (long long*) calloc((lineNumbers*1), sizeof(double));
+			lLatency[0] = 0;
+			char line[255];
+			char *ptr_;
+			for(int i=1; i<lineNumbers; i++) {
+				fscanf(fl, "%s", line);
+				// printf("%d: %s\n", i, line );
+				ptr_ = line;
+				lLatency[i] = strtoll(ptr_, &ptr_, 10);
+			}
+		}
+		else if(is_original(algo))
+		{
+			// do nothing
+		}
+		// algorithm not valid
+		else
+		{
+			printf("Please specify a valid algorithm\n\n");
+			exit(1);
+		}
+		// *****************************************************************
+
 
 		// *******************************************************************
 		// find timepoints using time interval in timeArray
@@ -293,45 +362,61 @@ int main(int argc, char *argv[])
 			else
 			{
 				// ********************************* Original *********************************
-				// Sleep for time interval calculated in Translate
-				// printf("%d. ", k);
-				// goSleep(timeArray[j]);
+				if(is_original(algo))
+				{
+					// Sleep for time interval calculated in Translate
+					// printf("%d. ", k);
+					goSleep(timeArray[j]);
+				}
 				// ******************************* End Original *******************************
 
 				// ********************************* Exp7 Set1 *********************************
-				// // subjuect: sleep for less time than orginally required
-				// toSleep = timeArray[j] >= 12012807 ? timeArray[j] - 12012807 : 0; // value is pre-calculated
-				// goSleep(toSleep); // nanoseconds
-				// printf("j = %zd k = %zd\n", j, k);
-				// printf("To sleep: %lld \n", toSleep);
+				else if(is_bruteforce(algo))
+				{
+					// subjuect: sleep for less time than orginally required
+					toSleep = timeArray[j] >= latency_val ? timeArray[j] - latency_val : 0; // value is pre-calculated
+					goSleep(toSleep); // nanoseconds
+					// printf("j = %zd k = %zd\n", j, k);
+					// printf("To sleep: %lld \n", toSleep);
+				}
+
 				// ******************************** End Exp7 Set1 ******************************
 
 				// ***************************** Exp7 Set3 and set4 ****************************
-				// subjuect: sleeping deficit method
-				// normal(set3) and sectional(set4) sleeping deficit method
-				// flip set 3 and 4 here
-				// toSleep = (int64_t)timeArray[j] - 12012807; // value is pre-calculated
-				toSleep = (int64_t)timeArray[j] - (int64_t)(lLatency[j]*1000);
+				else if(is_deficit(algo) || is_sec_deficit(algo))
+				{
+					// subjuect: sleeping deficit method
+					// normal(set3) and sectional(set4) sleeping deficit method
+					// flip set 3 and 4 here
+					if(is_deficit(algo))
+					{
+						toSleep = (int64_t)timeArray[j] - (int64_t)latency_val; // value is pre-calculated
+					}
+					else if(is_sec_deficit(algo))
+					{
+						toSleep = (int64_t)timeArray[j] - (int64_t)(lLatency[j]*1000);
+					}
 
-				// if current sleyping time is smaller than 0, add the extra sleeping time to deficit
-				if(toSleep < 0) {
-					goSleep(0);
-					sleepDeficit += 0 - toSleep;
-				}
-				else if (toSleep - sleepDeficit < 0) {
-					goSleep(0);
-					sleepDeficit -= sleepDeficit - toSleep;
-				}
-				else {
-					goSleep(toSleep - sleepDeficit);
-					sleepDeficit = 0;
-				}
+					// if current sleyping time is smaller than 0, add the extra sleeping time to deficit
+					if(toSleep < 0) {
+						goSleep(0);
+						sleepDeficit += 0 - toSleep;
+					}
+					else if (toSleep - sleepDeficit < 0) {
+						goSleep(0);
+						sleepDeficit -= sleepDeficit - toSleep;
+					}
+					else {
+						goSleep(toSleep - sleepDeficit);
+						sleepDeficit = 0;
+					}
 
-				// debug code
-				// printf("j = %zd k = %zd\n", j, k);
-				// printf("current latency: %lld\n", lLatency[j]);
-				// printf("timeArray[%zd] - p%zd = %lld - %lld = %lld\n", j, j, timeArray[j], lLatency[j]*1000, timeArray[j] - lLatency[j]*1000);
-				// printf("current toSleep: %lld\n", toSleep);
+					// debug code
+					// printf("j = %zd k = %zd\n", j, k);
+					// printf("current latency: %lld\n", lLatency[j]);
+					// printf("timeArray[%zd] - p%zd = %lld - %lld = %lld\n", j, j, timeArray[j], lLatency[j]*1000, timeArray[j] - lLatency[j]*1000);
+					// printf("current toSleep: %lld\n", toSleep);
+				}
 				// **************************** End Exp7 Set3 and Set4 **************************
 
 
@@ -389,7 +474,7 @@ int main(int argc, char *argv[])
 				event[x].value = checkEvent[x].value;
 			}
 
-			// ************************ Get time point ***************************
+			// ******************* Get time point and interval ********************
 			struct timeval timer_usec_tp;
 			long long int timestamp_usec_tp; /* timestamp in microsecond */
 			if (!gettimeofday(&timer_usec_tp, NULL))
@@ -403,11 +488,15 @@ int main(int argc, char *argv[])
 			}
 			if(firstLoop_tp == 1) {
 				initTimePoint = timestamp_usec_tp;
+				prevMicros = timestamp_usec_tp;
 				firstLoop_tp = 0;
-				printf("time elapsed from t0: %d \n", 0); // microseconds
+				printf("time elapsed from t0: %d \n", 0); // time point; microseconds
 			}
 			else {
-				printf("time elapsed from t0: %lld \n", timestamp_usec_tp - initTimePoint); // microseconds
+				micros = timestamp_usec_tp;
+				// printf("microseconds: %lld\n", micros - prevMicros); // time interval
+				prevMicros = micros;
+				printf("time elapsed from t0: %lld \n", timestamp_usec_tp - initTimePoint); // time point; microseconds
 			}
 			// ************************ End get time point ************************
 
