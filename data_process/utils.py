@@ -5,6 +5,9 @@ import math
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 
+REPLAY_TIME_PT_PATH = "data_set/exp%d/set%d/replayTimePointSet%d.txt"
+ACTUAL_TIME_PT_PATH = "data_set/exp%d/set%d/actualTimePointSet%d.txt"
+
 
 def round_up(value):
     # replace round function to implement precise rounding of the 3rd digit
@@ -60,6 +63,7 @@ def readActualTimePoint(file):
 
 def takeDifference(replay, actual):
     return np.array(replay) - np.array(actual)
+
 
 def getErrorPearson(difference):
     """Apply Pearson test to input array to test linearity of the dataset
@@ -128,6 +132,7 @@ def linear_regression(y_difference, n):
     plot_regression_line(x, y, b)
     return [b[0], b[1], error]
 
+
 def plot_regression_line_multi(x1, y1, b_a, x2, y2, b_b):
     # plotting the actual points as scatter plot
     plt.scatter(x1, y1, color="b", marker="o", s=30, label="before fix")  # old
@@ -179,9 +184,9 @@ def plotRecordActualCom(exp_num, set_num):
     """Plot recorded and replayed time points
     """
     replayTimePointsBlock = readReplayedTimePoint(
-        "data_set/exp%d/set%d/replayTimePointSet%d.txt" % (exp_num, set_num, set_num))
+        REPLAY_TIME_PT_PATH % (exp_num, set_num, set_num))
     actualTimePoints = readActualTimePoint(
-        "data_set/exp%d/set%d/actualTimePointSet%d.txt" % (exp_num, set_num, set_num))
+        ACTUAL_TIME_PT_PATH % (exp_num, set_num, set_num))
 
     plt.axis([0, 351, 0, 1.5e7])
     plt.plot(replayTimePointsBlock[0], 'ro', label="replay")
@@ -194,9 +199,9 @@ def plotRecordActualDiff(exp_num, set_num, color='ro', label=None, axis=[0, 426,
     """Plot difference curve of recorded and replayed time points
     """
     replayTimePointsBlock = np.array(readReplayedTimePoint(
-        "data_set/exp%d/set%d/replayTimePointSet%d.txt" % (exp_num, set_num, set_num)))
+        REPLAY_TIME_PT_PATH % (exp_num, set_num, set_num)))
     actualTimePoints = np.array(readActualTimePoint(
-        "data_set/exp%d/set%d/actualTimePointSet%d.txt" % (exp_num, set_num, set_num)))
+        ACTUAL_TIME_PT_PATH % (exp_num, set_num, set_num)))
 
     # take the average difference between the record and 20 replays
     num = replayTimePointsBlock.shape[0]
@@ -208,15 +213,23 @@ def plotRecordActualDiff(exp_num, set_num, color='ro', label=None, axis=[0, 426,
     plt.axis([0, 426, 0, 0.6*1e7])
     plt.plot(difference, color, label=label)
 
+
 def plotFixComWithLR(exp_num_before, set_num_before, exp_num_after, set_num_after):
-    """Plot two sets of recorded and replayed time points with linear regression applied to compare performance
     """
-    replayTimePointsBlock = readReplayedTimePoint("data_set/exp%d/set%d/replayTimePointSet%d.txt" % (exp_num_before, set_num_before, set_num_before))
-    actualTimePoints = readActualTimePoint("data_set/exp%d/set%d/actualTimePointSet%d.txt" % (exp_num_before, set_num_before, set_num_before))
+    Plot two sets of recorded and replayed time points
+    with linear regression applied to compare performance
+    """
+    replayTimePointsBlock = readReplayedTimePoint(
+        REPLAY_TIME_PT_PATH % (exp_num_before, set_num_before, set_num_before))
+    actualTimePoints = readActualTimePoint(ACTUAL_TIME_PT_PATH % (
+        exp_num_before, set_num_before, set_num_before))
     difference = takeDifference(replayTimePointsBlock[0], actualTimePoints)
 
-    replayTimePointsBlock = readReplayedTimePoint("data_set/exp%d/set%d/replayTimePointSet%d.txt" % (exp_num_after, set_num_after, set_num_after))
-    actualTimePoints = readActualTimePoint("data_set/exp%d/set%d/actualTimePointSet%d.txt" % (exp_num_after, set_num_after, set_num_after))
+    replayTimePointsBlock = readReplayedTimePoint(
+        REPLAY_TIME_PT_PATH % (exp_num_after, set_num_after, set_num_after))
+    actualTimePoints = readActualTimePoint(
+        ACTUAL_TIME_PT_PATH % (exp_num_after, set_num_after, set_num_after))
     difference_exp = takeDifference(replayTimePointsBlock[0], actualTimePoints)
 
-    linear_regression_multi(difference, len(difference), difference_exp, len(difference_exp))
+    linear_regression_multi(difference, len(difference),
+                            difference_exp, len(difference_exp))
