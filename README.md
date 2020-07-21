@@ -13,6 +13,25 @@ This repository is forked from the original RERAN repository, aiming to reseach 
 
 `src/` contains the modified RERAN source code.
 
+## Running Experiments
+
+### Record a workload
+```bash
+sh command/record.sh <exp_idx> <set_idx>
+```
+Please make sure that you have created the appropriate `exp` and `set` directories under `data_set` directory.
+
+### Get Latency Values of a workload
+```bash
+sh command/getLocalLatency.sh <exp_idx> <set_idx>
+```
+
+### Replay a workload
+```bash
+sh command/replay.sh <exp_idx> <set_idx> <algo>
+```
+`<algo>` could be one of `original`, `bruteforce`, `deficit`, `sec_deficit`.
+
 RERAN
 =====
 Record and Replay for Android
@@ -38,8 +57,8 @@ We would recommend using Sourcery CodeBench for ARM Lite on Linux.
 https://sourcery.mentor.com/GNUToolchain/release2450
 
 After the ARM cross-compiler is installed, you can compile the source code using the compiler's version of gcc, shown below.
-```
-  arm-none-linux-gnueabi-gcc -static -o replay replay.c
+```bash
+arm-none-linux-gnueabi-gcc -static -o replay replay.c
 ```
 
 ## Running Example
@@ -47,33 +66,32 @@ After the ARM cross-compiler is installed, you can compile the source code using
 Push replay tool onto the phone: "/data/local" will be our local
 directory on the phone for the RERAN files. If it does not exist, it
 will be created. This step only needs to be done once.
-```
-    cd /path/to/android-sdk/platform-tools
-
-    ./adb push ./replay /data/local
+```bash
+cd /path/to/android-sdk/platform-tools
+./adb push ./replay /data/local
 ```
 
 Record a trace: The getevent tool is part of the Android SDK. The "-tt"
 flag is to timestamp each event (used by the Translator in the next step).
-```
-    ./adb shell getevent -tt > recordedEvents.txt
+```bash
+./adb shell getevent -tt > recordedEvents.txt
 ```
 
 Run the Translate program: The first two arguments of the Translate program are the path to the recorded events and the name of the translated events to output, respectively. There are also extra flags: see selective replay and time-warping.
-```
-    cd /path/to/translate.jar/
+```bash
+cd /path/to/translate.jar/
 
-    java -jar translate.jar /path/to/recordedEvents.txt /path/to/android-sdk/platform-tools/translatedEvents.txt
+java -jar translate.jar /path/to/recordedEvents.txt /path/to/android-sdk/platform-tools/translatedEvents.txt
 ```
 
 Push the translated recorded events onto the phone:
-```
-    ./adb push translatedEvents.txt /data/local
+```bash
+./adb push translatedEvents.txt /data/local
 ```
 
 Run the replay program (after your app is setup): See setting up your app for more info.
-```
-    ./adb shell /data/local/./replay /data/local/translatedEvents.txt
+```bash
+./adb shell /data/local/./replay /data/local/translatedEvents.txt
 ```
 
 Please see the website www.androidreran.com for more info.

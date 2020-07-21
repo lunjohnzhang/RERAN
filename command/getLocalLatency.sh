@@ -5,11 +5,14 @@ source command/utils.sh
 sort_events
 translate_events
 
-# execute replay and log the replay time points (needs compiled replay.c to change accordingly)
-replay_with_out_latency  > ${EXP_REPLAY_TIME_POINT}
+# execute replay with original algo and log the replay time pointss
+replay "original"  > ${EXP_REPLAY_TIME_POINT}
 
 # get actual time point
-python ${DATA_P}getActualTimePoint.py ${EXP_RECORDED_EVENTS} > ${EXP_ACTUAL_TIME_POINT}
+get_actual_time_pt > ${EXP_ACTUAL_TIME_POINT}
 
-# get replay time point and calculate latency values
-python ${DATA_P}getLocalLatency.py ${EXP_REPLAY_TIME_POINT} ${EXP_ACTUAL_TIME_POINT} > ${LOCAL_LATENCY_VALUE}
+# calculate constant latency value
+approximate_const_latency > ${CONST_LATENCY_VALUE}
+
+# calculate per event latency values
+approximate_perevent_latency > ${LOCAL_LATENCY_VALUE}

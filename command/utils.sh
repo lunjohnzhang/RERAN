@@ -9,7 +9,8 @@ EXP_DIR="data_set/exp"${EXP}"/"
 SET_DIR="set"${SET}"/"
 EXP_SET_DIR=${EXP_DIR}${SET_DIR}
 
-LOCAL_LATENCY_VALUE=${EXP_SET_DIR}"localLatencyValue.txt"
+LOCAL_LATENCY_VALUE=${EXP_SET_DIR}"localLatencyValue.txt" # per event latency
+CONST_LATENCY_VALUE=${EXP_SET_DIR}"constLatencyValue.txt" # const latency
 TRANSLATED_EVENTS=${EXP_SET_DIR}"translatedEvents.txt"
 SORTED_EVENTS=${EXP_SET_DIR}"sortedEvents.txt"
 
@@ -35,6 +36,14 @@ function approximate_const_latency {
     python ${DATA_P}getConstLatency.py ${EXP} ${SET}
 }
 
+function approximate_perevent_latency {
+    python ${DATA_P}getLocalLatency.py ${EXP_REPLAY_TIME_POINT} ${EXP_ACTUAL_TIME_POINT}
+}
+
+function get_actual_time_pt {
+    python ${DATA_P}getActualTimePoint.py ${EXP_RECORDED_EVENTS}
+}
+
 function translate_events {
     java bin/Translate ${SORTED_EVENTS} ${TRANSLATED_EVENTS}
     adb push ${TRANSLATED_EVENTS} ${PUSH_TO}
@@ -42,6 +51,11 @@ function translate_events {
 
 function push_latency {
     adb push ${LOCAL_LATENCY_VALUE} ${PUSH_TO}
+}
+
+function read_in_const_latency {
+    line=$(head -n 1 $CONST_LATENCY_VALUE)
+    echo $line
 }
 
 # function replay_with_out_latency {
@@ -60,16 +74,17 @@ function push_latency {
 #   latency: filename of the latency values or a const latency value
 function replay {
     algo=$1
-    latency_val=$(approximate_const_latency) # get const latency value
     if [ "$algo" == "original" ]; then
         2>>${EXP_REPLAY_TIME} time adb shell ${PUSH_TO}/./replay -t ${PUSHED_TRANSLATE} -a "original"
     fi
 
     if [ "$algo" == "bruteforce" ]; then
+        latency_val=$(read_in_const_latency) # get const latency value
         2>>${EXP_REPLAY_TIME} time adb shell ${PUSH_TO}/./replay -t ${PUSHED_TRANSLATE} -a "bruteforce" -l latency_val
     fi
 
     if [ "$algo" == "deficit" ]; then
+        latency_val=$(read_in_const_latency) # get const latency value
         2>>${EXP_REPLAY_TIME} time adb shell ${PUSH_TO}/./replay -t ${PUSHED_TRANSLATE} -a "deficit" -l latency_val
     fi
 
