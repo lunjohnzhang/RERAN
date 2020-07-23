@@ -30,7 +30,7 @@ sh command/getLocalLatency.sh <exp_idx> <set_idx>
 ```bash
 sh command/replay.sh <exp_idx> <set_idx> <algo>
 ```
-`<algo>` could be one of `original`, `bruteforce`, `deficit`, `sec_deficit`.
+`<algo>` could be one of `original`, `bruteforce`, `deficit`, `sec_deficit`, `busy_pooling`.
 
 RERAN
 =====
