@@ -3,7 +3,11 @@ Gather workload data from subject 1 and test 4 new schedulers of RERAN on rhythm
 
 # Data Set
 set1: workload from subject 1 with no fix
+
 set2: workload from subject 1 with sectional deficit fix
+
 set3: workload from subject 1 with deficit fix
+
 set4: workload from subject 1 with bruteforce fix
+
 set5: workload from subject 1 with busy pooling fix
