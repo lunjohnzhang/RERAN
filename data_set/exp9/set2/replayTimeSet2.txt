@@ -1,6 +1,2 @@
-      274.34 real         0.08 user         0.61 sys
-      272.49 real         0.08 user         0.60 sys
-record time is 182.924
-mean: 273.415
-standard diviation: 0.925
-error: 1.495
+      464.51 real         0.09 user         0.70 sys
+      420.63 real         0.08 user         0.59 sys

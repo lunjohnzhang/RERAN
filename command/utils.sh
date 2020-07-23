@@ -91,4 +91,8 @@ function replay {
     if [ "$algo" == "sec_deficit" ]; then
         2>>${EXP_REPLAY_TIME} time adb shell ${PUSH_TO}/./replay -t ${PUSHED_TRANSLATE} -a "sec_deficit" -l ${PUSHED_LATENCY}
     fi
+
+    if [ "$algo" == "busy_pooling" ]; then
+        2>>${EXP_REPLAY_TIME} time adb shell ${PUSH_TO}/./replay -t ${PUSHED_TRANSLATE} -a "busy_pooling"
+    fi
 }

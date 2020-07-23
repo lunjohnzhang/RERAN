@@ -86,6 +86,28 @@ int is_original(char *algo)
 	return !strcmp(algo, "original");
 }
 
+int is_busy_pooling(char *algo)
+{
+	return !strcmp(algo, "busy_pooling");
+}
+
+// get time elapsed from initial event in microseconds
+unsigned long long int get_current_time_pt()
+{
+	struct timeval timer_usec_tp;
+	unsigned long long int timestamp_usec_tp; /* timestamp in microsecond */
+	if (!gettimeofday(&timer_usec_tp, NULL))
+	{
+		timestamp_usec_tp = ((long long int)timer_usec_tp.tv_sec) * 1000000ll +
+							(long long int)timer_usec_tp.tv_usec;
+	}
+	else
+	{
+		timestamp_usec_tp = -1;
+	}
+	return timestamp_usec_tp;
+}
+
 
 // from <linux/input.h>
 #define EVIOCGVERSION		_IOR('E', 0x01, int)			/* get driver version */
@@ -227,6 +249,7 @@ int main(int argc, char *argv[])
 		// determine the scheduler algorithm and read in relevant params
 		long long *lLatency; // for sectional deficit
 		long long latency_val; // for bruteforce and deficit
+		uint64_t *timePoints; // timePoint of recorded events in nanoseconds
 		// choose scheduler algorithm
 		if(is_bruteforce(algo))
 		{
@@ -256,25 +279,22 @@ int main(int argc, char *argv[])
 		{
 			// do nothing
 		}
+		else if(is_busy_pooling(algo))
+		{
+			// find timepoints using time interval in timeArray
+			timePoints = (uint64_t *)calloc((lineNumbers*1), sizeof(uint64_t));
+			timePoints[0] = timeArray[0];
+			for(i = 1; i < lineNumbers; ++i) {
+				timePoints[i] = timePoints[i-1] + timeArray[i];
+				// printf("time point%zd: %lld\n", i, timePoints[i]);
+			}
+		}
 		// algorithm not valid
 		else
 		{
 			printf("Please specify a valid algorithm\n\n");
 			exit(1);
 		}
-		// *****************************************************************
-
-
-		// *******************************************************************
-		// find timepoints using time interval in timeArray
-		uint64_t *timePoints;
-		timePoints = (uint64_t *)calloc((lineNumbers*1), sizeof(uint64_t));
-		timePoints[0] = timeArray[0];
-		for(i = 1; i < lineNumbers; ++i) {
-			timePoints[i] = timePoints[i-1] + timeArray[i];
-			// printf("time point%zd: %lld\n", i, timePoints[i]);
-		}
-
 		// *******************************************************************
 
 
@@ -295,7 +315,7 @@ int main(int argc, char *argv[])
 		int firstLoop = 1;
 
 		// variables needed for time point calculation
-		long long int initTimePoint;
+		unsigned long long int initTimePoint;
 		int firstLoop_tp = 1;
 		long long int currTimePoint; // used for determining whether current time is before expected time point
 		struct timeval currTime;
@@ -417,6 +437,16 @@ int main(int argc, char *argv[])
 					// printf("timeArray[%zd] - p%zd = %lld - %lld = %lld\n", j, j, timeArray[j], lLatency[j]*1000, timeArray[j] - lLatency[j]*1000);
 					// printf("current toSleep: %lld\n", toSleep);
 				}
+
+				else if(is_busy_pooling(algo))
+				{
+					unsigned long long int curr_time_pt = get_current_time_pt() - initTimePoint; // microseconds
+					while(curr_time_pt * 1000 <= timePoints[j])
+					{
+						goSleep(50);
+						curr_time_pt = get_current_time_pt() - initTimePoint; // microseconds
+					}
+				}
 				// **************************** End Exp7 Set3 and Set4 **************************
 
 
@@ -475,17 +505,18 @@ int main(int argc, char *argv[])
 			}
 
 			// ******************* Get time point and interval ********************
-			struct timeval timer_usec_tp;
-			long long int timestamp_usec_tp; /* timestamp in microsecond */
-			if (!gettimeofday(&timer_usec_tp, NULL))
-			{
-				timestamp_usec_tp = ((long long int)timer_usec_tp.tv_sec) * 1000000ll +
-								 (long long int)timer_usec_tp.tv_usec;
-			}
-			else
-			{
-				timestamp_usec_tp = -1;
-			}
+			// struct timeval timer_usec_tp;
+			// long long int timestamp_usec_tp; /* timestamp in microsecond */
+			// if (!gettimeofday(&timer_usec_tp, NULL))
+			// {
+			// 	timestamp_usec_tp = ((long long int)timer_usec_tp.tv_sec) * 1000000ll +
+			// 					 (long long int)timer_usec_tp.tv_usec;
+			// }
+			// else
+			// {
+			// 	timestamp_usec_tp = -1;
+			// }
+			long long int timestamp_usec_tp = get_current_time_pt();
 			if(firstLoop_tp == 1) {
 				initTimePoint = timestamp_usec_tp;
 				prevMicros = timestamp_usec_tp;
@@ -496,7 +527,8 @@ int main(int argc, char *argv[])
 				micros = timestamp_usec_tp;
 				// printf("microseconds: %lld\n", micros - prevMicros); // time interval
 				prevMicros = micros;
-				printf("time elapsed from t0: %lld \n", timestamp_usec_tp - initTimePoint); // time point; microseconds
+				currTimePoint = timestamp_usec_tp - initTimePoint;
+				printf("time elapsed from t0: %lld \n", currTimePoint); // time point; microseconds
 			}
 			// ************************ End get time point ************************
 
